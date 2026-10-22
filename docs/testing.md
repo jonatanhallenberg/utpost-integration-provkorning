@@ -11,7 +11,7 @@ Vi ärvde en klient utan ett enda test och ett API vars kontrakt bara fanns i hu
 ## Nivåer
 - **Enhet (Vitest):** funktioner utan Vue i sig – `lib/tours.ts` (höjdmeter, formatering), senare validering och datum. Millisekunder, inga mockar.
 - **Komponent (Vitest + Vue Testing Library):** vyerna. Rendera, fråga som en användare (`getByRole`, `getByLabelText`), interagera med `user-event`. API-modulen mockad.
-- **API (från M5):** integrationstester mot GraphQL-servern med riktig databas, i pipelinen. Inte nu.
+- **API (M5):** integrationstester mot GraphQL-servern med riktig databas – lokalt mot compose-databaserna, i pipelinen mot services. Ingen port, ingen mock: `yoga.fetch()` får samma request som browsern skickar.
 - **E2E:** inte förrän M6. Då ett smoke-test mot staging.
 
 ## Karta: vad testas var
@@ -23,6 +23,7 @@ Vi ärvde en klient utan ett enda test och ett API vars kontrakt bara fanns i hu
 | Guidevyn (lista + sök) | komponent | beteende i UI: filtrering, tom lista, fel | ja, 4 st |
 | Turvyn (tabell) | komponent | nästa vy att porta – test skrivs i samma PR | nej |
 | Turdetalj | komponent | beroende av `elevationGain` som redan är testad; kan vänta | nej |
+| GraphQL-API:et (`api/src/graphql/`) | integration | resolvers mot riktig databas: N+1-regression, inloggningskrav, fel med 200, migreringen av loggar | ja, 6 st (M5) |
 | `api.ts` | ingen egen | tre rader; testas indirekt genom komponenttesterna | – |
 | Inloggning (Pinia-store) | enhet på storen | logik utan UI; komponenttest på LoginView när den portas | nej |
 | Routern | ingen | Vue Routers beteende är inte vårt att testa | – |
@@ -46,4 +47,4 @@ Vue Router och Pinia (de har egna tester), CSS och klassnamn, exakt DOM-struktur
 Vi får skriva en label på varje formulärfält (annars hittar inte testet det) – det är en fördel, inte en kostnad. Komponenttester tar sekunder, inte millisekunder: håll dem få och riktade. Den dagen API:et mockas på ett annat sätt (MSW?) skrivs den här filen om.
 
 ## Kommandon
-`npm test` (en gång, som i pipelinen) · `npm run test:watch --workspace=client`
+`npm test` (klienten, en gång, som i pipelinen) · `npm run test:watch --workspace=client` · `npm run test:api` (integrationstesterna, kräver databaserna igång och seedade)
