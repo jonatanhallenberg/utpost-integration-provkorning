@@ -30,7 +30,7 @@ flowchart LR
 | Test | `npm test` (`vitest run`) | ett röktest på guidevyn den här veckan (M1) – riktiga tester i M2 | ~3 s |
 | Bygg | `npm run build` (`vite build` av `client/`) | importfel, trasiga templates, allt som bara syns vid bygge | ~2 s |
 | Typkontroll (M2, M5) | `npm run typecheck` (codegen + `vue-tsc` + `tsc`) | ett fält som tagits bort ur schemat men används i en vy – kedjan schema → fråga → vy | ~10 s |
-| Integration (M5) | `npm run test:api` mot Postgres och Mongo som *services* | resolvers som inte stämmer med databasen, N+1 som kommit tillbaka, mutationer utan inloggningskrav – det klientens mockade tester aldrig ser | ~40 s inkl. start av databaserna |
+| Integration (M5) | `npm run test:api` mot Postgres och Mongo som *services* | resolvers som inte stämmer med databasen, N+1 som kommit tillbaka, mutationer utan inloggningskrav – det klientens mockade tester aldrig ser | ~1 min (uppmätt 22/10: 1 min 5 s på PR, 1 min 1 s på main) inkl. start av databaserna |
 | Image (M4) | `docker/build-push-action` på `api/Dockerfile` och `client/Dockerfile` | en Dockerfile som inte går att bygga; på `main` publiceras imagerna med `sha-`tagg | ~1,5 min |
 
 `npm ci` (~25 s) dominerar – den installerar alla tre workspaces inklusive React-klientens beroenden. När `web/` tas bort (M6) halveras tiden.
